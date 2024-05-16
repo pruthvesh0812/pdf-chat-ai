@@ -20,3 +20,11 @@ export const historyAwarePrompt = ChatPromptTemplate.fromMessages([
   ],
 ]);
 
+export const historyAwareRetrievalPrompt = ChatPromptTemplate.fromMessages([
+  [
+    "system",
+    "Answer the user's questions based on the below context:\n\n{context}. NOTE: only answer what is required, up to the mark. If you don't know an answer, say:Sorry I am trained on the PDF you uploaded, I don't know the answer to your question",
+  ],
+  new MessagesPlaceholder("chat_history"),
+  ["user", "{input}"],
+]);

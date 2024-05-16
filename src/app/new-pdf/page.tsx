@@ -17,7 +17,7 @@ const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
       const blob = new Blob([arrBuffer])
       const formData = new FormData()
       formData.append('pdfBlob', blob)
-      const res = await axios.post("http://localhost:3000/api/generate-embeddings", formData, {
+      const res = await axios.post(`http://localhost:3000/api/generate-embeddings`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         },

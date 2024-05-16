@@ -7,7 +7,8 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
     const formData = await request.formData()
     const blob: Blob = formData.get("pdfBlob") as Blob
-
+    const userId = request.cookies.get("user")?.value as string
+    const pdfId = request.nextUrl.searchParams.get("pdfId") as string
     try{
         const arrayBuffer = await blob.arrayBuffer()
         const splitDocs = await extractTextFromPdf(arrayBuffer)
@@ -15,7 +16,7 @@ export async function POST(request: NextRequest) {
         const client = await getPineconeClient()
         console.log("after pine")
 
-        await generateEmbeddings(splitDocs,client)
+        await generateEmbeddings(splitDocs,client,userId,pdfId)
         console.log("after embeddings")
 
         return NextResponse.json({ message: "document embedded successfully" }, { status: 200 })
