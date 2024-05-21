@@ -33,7 +33,7 @@ export const getPineconeClient = async ():Promise<Pinecone> => {
   return new Promise(async (resolve,reject) =>{
     try{
       const currentIndexes = await pc.listIndexes()
-      console.log(currentIndexes,"curr")
+ 
       currentIndexes.indexes?.forEach(indexModal =>{
         if(indexModal.name == process.env.PINECONE_INDEX_NAME ){
           isIndexCreated = true;

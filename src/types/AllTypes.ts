@@ -8,3 +8,8 @@ export type messageType = {
     text:string,
     timestamp:number,
 }
+
+export type pdf ={
+    pdfId:string,
+    pdfName:string
+}

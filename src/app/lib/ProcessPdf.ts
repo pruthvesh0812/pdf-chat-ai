@@ -40,7 +40,7 @@
 // import { PDFDocument } from 'pdf-lib';
 import { WebPDFLoader } from "langchain/document_loaders/web/pdf";
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
-import fs from 'fs'
+
 export const extractTextFromPdf = async (buffer: ArrayBuffer) => {
   // import { PDFLoader } from "langchain/document_loaders/fs/pdf";
   // Or, in web environments:
@@ -50,7 +50,7 @@ export const extractTextFromPdf = async (buffer: ArrayBuffer) => {
   // const loader = new PDFLoader("src/document_loaders/example_data/example.pdf");
   
   const docs = await loader.load();
-  console.log(docs,"docs")
+
   const splitter = new RecursiveCharacterTextSplitter();
   const splitDocs = await splitter.splitDocuments(docs);
 
