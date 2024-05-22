@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a Nextjs application which enables users to query contents from uploaded pdf, with a chat interface.
 
-## Getting Started
+# Project Report
+## Methodology
 
+### PDF Parser: Pdf contents have to be parsed first, for that I used built in Pdf parsers provided by langchain, which uses pdf-dist at its core. I wanted to parser the pdf on the client side and then send only the parsed data on the server, trying to reduce some server load, but couldn't find any suitable client-side Pdf parsing library.
+### Vector Embeddings: The parsed pdf content being huge in size most of the times, the parsed data needs to be chunked first and then vector embeddings have to be generated for each of the chunked data and then combined and stored in Pinecone vector database. I used openAi's embedding class object to generate embeddings
+### Pinecone: The vector embeddings are stored in pinecone vector database. It uses indexing to retrived data quickly compared to tradition databases, and also has metric like cosine, nearest neighbours, to allow semantic search, that is search on the basis of context of the seach query.
+### Chat Section: The user can interact with the pdf once it is processed. A conversational format is used for the chat. The question the user asks, is first converted into vector embeddings, and then context for the question is retrieved from pdf's vector embeddings in the pinecone db (semantic search). Then the questions vector embeddings, contextual vector embeddings, and chat history is passed to the historyAwareConversationalRetrievalChain from langchain with a set of custom prompts to get the desired output
+
+## Architecture Diagram
+![pdf-chat-ai-architecture](https://github.com/pruthvesh0812/pdf-chat-ai/assets/98747838/55f36d73-7d79-48ff-8801-34cd0e179323)
+
+## Tech Stack
+Nextjs 13, MongoDb, Langchain, PineconeDb
+
+## Encountered Challenges
+The only challenge I faced was to use app router in nextjs 13. Shifting from page router to app router, and building an app in a contricted time window was a challenge.
 First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Key Learnings
+Understood how LLM's and Vector Database work. Got familiar with the ups and downs of the Nextjs 13's app router.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [https://pdf-chat-ai-two.vercel.app/signup](https://pdf-chat-ai-two.vercel.app/signup) with your browser to chat with your pdf.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
