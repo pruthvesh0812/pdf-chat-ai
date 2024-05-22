@@ -6,7 +6,7 @@ import {  messageType } from '@/types/AllTypes'
 import { useRecoilValue } from 'recoil'
 import { pdfIdState } from '../../store/Pdf'
 import { truncate } from '@/utils/truncate'
-import { NEXT_APP_BASE_URL } from '../../../env'
+import { NEXT_APP_BASE_URL } from '../../../envv'
 
 const getResponse = async (question: string, messages: messageType[], pdfId: string) => {
     const chatId = pdfId

@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { truncate } from '@/utils/truncate'
 import Loading from './loading'
-import { NEXT_APP_BASE_URL } from '../../env'
+import { NEXT_APP_BASE_URL } from '../../envv'
 
 
 

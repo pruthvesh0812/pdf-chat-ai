@@ -4,7 +4,7 @@ import { usePathname, useRouter} from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
 import axios from 'axios';
-import { NEXT_APP_BASE_URL } from '../../../env';
+import { NEXT_APP_BASE_URL } from '../../../envv';
 
 export default function NavBar() {
   const [isLoggedIn,setIsLoggedIn] = useState<boolean>(false)

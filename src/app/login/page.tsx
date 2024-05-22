@@ -5,7 +5,7 @@ import axios from 'axios'
 import Link from 'next/link'
 import { useRouter} from 'next/navigation'
 import React, { useState } from 'react'
-import { NEXT_APP_BASE_URL } from '../../../env'
+import { NEXT_APP_BASE_URL } from '../../../envv'
 
 export default function page() {
     const [userSignIn,setUserSignIn] = useState<{email:string, password:string}>({email:"", password:""})
