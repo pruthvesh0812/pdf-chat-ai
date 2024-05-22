@@ -79,7 +79,7 @@ export default function ChatSeciton() {
 
                 </div>
             </div>
-            <div className='relative mt-[15vh] px-6 md:px-14'>
+            <div className='relative mt-[8vh] px-6 md:px-14 h-full'>
 
                 <input
                     type='text'
