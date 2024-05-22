@@ -7,9 +7,8 @@ import { useRouter} from 'next/navigation'
 import React, { useState } from 'react'
 import { NEXT_APP_BASE_URL } from '../../../envv'
 
-export default function page() {
+export default function Login() {
     const [userSignIn,setUserSignIn] = useState<{email:string, password:string}>({email:"", password:""})
-    const [errorMessage,setErrorMessage] = useState("")
     const [processing,setProcessing] = useState(false)
 
     const router = useRouter()

@@ -103,7 +103,7 @@ export default function HomePage() {
                 {
                   uploadedFiles.map(file=>{
                     return (
-                      <div className='flex justify-between px-3 py-2 my-3'>
+                      <div key={file.name} className='flex justify-between px-3 py-2 my-3'>
                         <div>
                           {truncate(file.name)}
                           
@@ -154,7 +154,8 @@ export default function HomePage() {
             {
                userPdfs.userPdfs.map(pdf =>{
                 return (
-                  <div 
+                  <div
+                  key={pdf.pdfName} 
                   onClick={()=>{
                     setPdfId({pdfId:pdf.pdfId,pdfName:pdf.pdfName})
                     router.push("/chat")
