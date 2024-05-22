@@ -1,1 +1,2 @@
-export const NEXT_APP_BASE_URL = "https://pdf-chat-ai-two.vercel.app"
+export const NEXT_APP_BASE_URL = "http://localhost:3000"
+const app = 0

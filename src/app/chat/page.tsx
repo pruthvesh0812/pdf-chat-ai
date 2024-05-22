@@ -57,27 +57,29 @@ export default function ChatSeciton() {
 
     return (
         <div >
-            <div className=' w-full h-[70vh] my-5 overflow-y-auto px-14' ref={scrollContainerRef}>
-                <div className='relative'>
-                    <h1 className='bg-[#195157] px-3 py-2 rounded-sm rounded-t-none flex justify-center fixed top-1 left-[40%]'>Chatting With {truncate(pdfName)}</h1>
+            <div className=' w-full h-[70vh] my-5 overflow-y-auto px-2 md:px-14' ref={scrollContainerRef}>
+                <div className='relative  '>
+                    <h1 className='bg-[#195157] px-3 py-2 rounded-sm rounded-t-none flex justify-center fixed top-14 left-[15%] md:left-[40%]'>Chatting With {truncate(pdfName)}</h1>
+                    <div className='pt-10'>
 
                     {
                         allMessages.map((message, index) => {
                             return (
-                                <div key={index} className={`flex ${message.type == "AI" ? "justify-start" : "justify-end"}`}>
+                                <div key={index} className={`flex  ${message.type == "AI" ? "justify-start" : "justify-end"}`}>
                                     <div
-                                        className={` px-2 py-4 mx-4 w-[50%] my-4 bg-[#195157]  ${message.type == "AI" ? "rounded-r-xl rounded-bl-xl" : "rounded-l-xl rounded-br-xl"}`}
+                                        className={` px-2 py-4 mx-4 w-[70%] md:w-[50%] my-4 bg-[#195157]  ${message.type == "AI" ? "rounded-r-xl rounded-bl-xl" : "rounded-l-xl rounded-br-xl"}`}
                                     >
                                         {message.text}
                                     </div>
                                 </div>
                             )
                         })
-                    }
+                    }                        
+                     </div>
 
                 </div>
             </div>
-            <div className='relative px-14'>
+            <div className='relative mt-[15vh] px-6 md:px-14'>
 
                 <input
                     type='text'
@@ -105,7 +107,7 @@ export default function ChatSeciton() {
                 />
 
                 <button
-                    className={`h-12 w-12 rounded  text-slate-100 absolute right-[60px] top-[4px] ${gettingResponse ? "bg-[#1a2020]" : "bg-[#195157]"}  `}
+                    className={`h-12 w-12 rounded  text-slate-100 absolute right-[27px] md:right-[60px] top-[4px] ${gettingResponse ? "bg-[#1a2020]" : "bg-[#195157]"}  `}
                     disabled={(question.length === 0 || isEmptyOrWhitespace(question) || gettingResponse == true)}
 
                     onClick={async () => {
