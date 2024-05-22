@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <RecoilRoot>
-        <body className={inter.className}>
+        <body className="text-slate-100">
           <NavBar />
           <Suspense fallback={<Loading />} />
           {children}
