@@ -12,7 +12,7 @@ import { pdfs } from "../../models/Pdf";
 import { users } from "@/models/User";
 export const generateEmbeddings = async (splitDocs: Document<Record<string, any>>[], client: Pinecone, userId: string, pdfId: string,pdfName:string) => {
     const embeddings = new OpenAIEmbeddings();
-    const index = client.Index(process.env.PINECONE_INDEX_NAME)
+    const index = client.Index(process.env.PINECONE_INDEX_NAME!)
 
     const dynamicNamespace = userId + uuidv4() + "-namespace"
     try {

@@ -1,5 +1,5 @@
 import { getPineconeClient } from "@/app/lib/PineconeClient";
-import { getConversationalRetrievalChain, getRetrievalChain } from "@/app/lib/RetrievalChain";
+import { getConversationalRetrievalChain } from "@/app/lib/RetrievalChain";
 import { NextRequest, NextResponse } from "next/server";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
 import { messageType } from "@/types/AllTypes";

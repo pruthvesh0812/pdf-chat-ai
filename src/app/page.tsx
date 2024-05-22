@@ -3,15 +3,17 @@ import React, { useCallback, useEffect, useState } from 'react'
 // import pdf from 'pdf-parse'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
-import { extractTextFromPdf } from './lib/ProcessPdf'
-import { generateEmbeddings } from './lib/GenerateEmbeddings'
-import { redirect } from 'next/navigation'
 import { SetterOrUpdater, useSetRecoilState } from 'recoil'
 import { pdfIdState } from '../store/Pdf'
 import { useDropzone } from 'react-dropzone'
 import { pdf } from '@/types/AllTypes'
 import { useRouter } from 'next/navigation'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
+import { truncate } from '@/utils/truncate'
+import Loading from './loading'
+import { NEXT_APP_BASE_URL } from '../../env'
+
+
 
 const handleFileUpload = async (pdfFILE : File, setPdfId: SetterOrUpdater<pdf>,router:AppRouterInstance) => {
   // console.log("sdfs1")
@@ -28,7 +30,7 @@ const handleFileUpload = async (pdfFILE : File, setPdfId: SetterOrUpdater<pdf>,r
       
       const pdfId = `${uuidv4()}-pdfId`
       try{
-        const res = await axios.post(`http://localhost:3000/api/generate-embeddings?pdfId=${pdfId}&pdfName=${pdfName}`, formData, {
+        const res = await axios.post(`${NEXT_APP_BASE_URL}/api/generate-embeddings?pdfId=${pdfId}&pdfName=${pdfName}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data"
           },
@@ -51,12 +53,13 @@ const handleFileUpload = async (pdfFILE : File, setPdfId: SetterOrUpdater<pdf>,r
 }
 
 
-const getAllUserPdfs = async (setUserPdfs: React.Dispatch<React.SetStateAction<pdf[]>>) =>{
+const getAllUserPdfs = async (setUserPdfs: React.Dispatch<React.SetStateAction<{userPdfs: pdf[];isEmpty: boolean | undefined;}>>) =>{
   try{
-    const res = await axios.get("http://localhost:3000/api/pdfs")
+
+    const res = await axios.get(`${NEXT_APP_BASE_URL}/api/pdfs`)
     if(res){
-      // console.log(JSON.parse(res.data))
-      setUserPdfs(JSON.parse(res.data).userPdfs)
+      console.log(JSON.parse(res.data))
+      setUserPdfs(JSON.parse(res.data))
     }
   }
   catch(err:any){
@@ -67,7 +70,7 @@ const getAllUserPdfs = async (setUserPdfs: React.Dispatch<React.SetStateAction<p
 
 export default function HomePage() {
   const [uploadedFiles,setUploadedFiles] = useState<File[]>([])
-  const [userPdfs,setUserPdfs] = useState<pdf[]>([])
+  const [userPdfs,setUserPdfs] = useState<{userPdfs:pdf[],isEmpty:boolean|undefined}>({userPdfs:[],isEmpty:undefined})
   const setPdfId = useSetRecoilState(pdfIdState)
   const router = useRouter()
   const {getRootProps,getInputProps,isDragActive} = useDropzone({
@@ -89,7 +92,7 @@ export default function HomePage() {
   return (
     <div className='flex justify-center '>
       <div className=''>
-        <h1 className="text-2xl ">Upload a PDF File to Chat With!</h1>
+        <h1 className="text-2xl flex justify-content">Upload a PDF File to Chat With!</h1>
         
         {/* drop zone */}
         <div {...getRootProps()} className='border border-dashed  border-slate-200 h-[300px] rounded-lg my-10'>
@@ -102,11 +105,12 @@ export default function HomePage() {
                     return (
                       <div className='flex justify-between px-3 py-2 my-3'>
                         <div>
-                          {file.name}
+                          {truncate(file.name)}
+                          
                         </div>
-                        <div>
+                        {/* <div>
                           {file.size}
-                        </div>
+                        </div> */}
                       </div>
                      
                     )
@@ -132,14 +136,23 @@ export default function HomePage() {
         <div className="my-5">
         <h1 className='flex justify-center text-xl'>Previously Uploaded PDFs</h1>
         {
-          (userPdfs.length == 0) ? 
+          (userPdfs.userPdfs.length == 0) ? 
           <div className='flex justify-center my-5'>
-            Loading previous Pdfs ... Please wait
+            {
+              (userPdfs.isEmpty == undefined) ?
+              <div>
+                <Loading />
+              </div>
+              :
+              <div>
+                No Pdfs Exists
+              </div>
+            }
           </div> 
           :
-          <div>
+          <div className='h-[300px] my-5 overflow-y-auto'>
             {
-               userPdfs.map(pdf =>{
+               userPdfs.userPdfs.map(pdf =>{
                 return (
                   <div 
                   onClick={()=>{
@@ -147,7 +160,7 @@ export default function HomePage() {
                     router.push("/chat")
                   }}
                   className="flex px-3 py-2 my-4 text-lg bg-[#195157] rounded cursor-pointer hover:bg-[#0a2f33]">
-                    {pdf.pdfName}
+                    {truncate(pdf.pdfName)}
                   </div>
                 )
               })

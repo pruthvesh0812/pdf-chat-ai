@@ -3,7 +3,7 @@ import { Pinecone } from '@pinecone-database/pinecone';
 let isIndexCreated: boolean = false
 
 const pc = new Pinecone({
-  apiKey: process.env.PINECONE_API_KEY
+  apiKey: process.env.PINECONE_API_KEY!
 });
 
 
@@ -11,7 +11,7 @@ const pc = new Pinecone({
 const createPineConeIndex = async () =>{
   try{
     await pc.createIndex({
-      name: process.env.PINECONE_INDEX_NAME,
+      name: process.env.PINECONE_INDEX_NAME!,
       dimension: 1536,
       metric: 'cosine',
       spec: { 
@@ -35,7 +35,7 @@ export const getPineconeClient = async ():Promise<Pinecone> => {
       const currentIndexes = await pc.listIndexes()
  
       currentIndexes.indexes?.forEach(indexModal =>{
-        if(indexModal.name == process.env.PINECONE_INDEX_NAME ){
+        if(indexModal.name == process.env.PINECONE_INDEX_NAME! ){
           isIndexCreated = true;
         }
       })

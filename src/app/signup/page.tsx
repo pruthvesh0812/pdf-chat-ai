@@ -2,8 +2,9 @@
 
 import axios from 'axios'
 import Link from 'next/link'
-import { redirect , useRouter} from 'next/navigation'
+import {  useRouter} from 'next/navigation'
 import React, { useState } from 'react'
+import { NEXT_APP_BASE_URL } from '../../../env'
 
 
 export default function page() {
@@ -14,7 +15,7 @@ export default function page() {
     const handleSignUp = async () =>{
         setProcessing(true)
         try{
-            const res = await axios.post(`http://localhost:3000/api/signup`,JSON.stringify(userSignUp))
+            const res = await axios.post(`${NEXT_APP_BASE_URL}/api/signup`,JSON.stringify(userSignUp))
             if(res.status == 200){
                 router.push("/")
             }

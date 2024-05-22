@@ -4,13 +4,14 @@ import { usePathname, useRouter} from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
 import axios from 'axios';
+import { NEXT_APP_BASE_URL } from '../../../env';
 
 export default function NavBar() {
   const [isLoggedIn,setIsLoggedIn] = useState<boolean>(false)
   
   const initUser = async () =>{
     try{
-       const res = await axios.post("http://localhost:3000/api/isLoggedIn")
+       const res = await axios.post(`${NEXT_APP_BASE_URL}/api/isLoggedIn`)
        if(res){
           setIsLoggedIn(res.data.isLoggedIn)
        }
@@ -49,7 +50,7 @@ export default function NavBar() {
                         <h1  
                         onClick={async ()=>{
                           try{
-                            const res =await axios.post("http://localhost:3000/api/signout",JSON.stringify({signout:true}))
+                            const res =await axios.post(`${NEXT_APP_BASE_URL}/api/signout`,JSON.stringify({signout:true}))
                             if(res){
                               router.push("/login")
                             }

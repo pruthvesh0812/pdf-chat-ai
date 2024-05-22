@@ -3,9 +3,11 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { RecoilRoot } from "recoil";
-import { jwtVerify } from "jose";
+
 import NavBar from "./components/NavBar";
-import { initUser } from "../utils/initUser";
+
+import Loading from "./loading";
+import { Suspense } from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
@@ -18,6 +20,7 @@ export default function RootLayout({
       <RecoilRoot>
         <body className={inter.className}>
           <NavBar />
+          <Suspense fallback={<Loading />} />
           {children}
         </body>
       </RecoilRoot>

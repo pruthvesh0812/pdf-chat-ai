@@ -1,15 +1,17 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react'
-import { v4 as uuidv4 } from 'uuid'
+
 import axios from 'axios'
-import { aiMessagesType, messageType } from '@/types/AllTypes'
+import {  messageType } from '@/types/AllTypes'
 import { useRecoilValue } from 'recoil'
 import { pdfIdState } from '../../store/Pdf'
+import { truncate } from '@/utils/truncate'
+import { NEXT_APP_BASE_URL } from '../../../env'
 
 const getResponse = async (question: string, messages: messageType[], pdfId: string) => {
     const chatId = pdfId
     try {
-        const response = await axios.post(`http://localhost:3000/api/${chatId}`, JSON.stringify({ question: question, messages }), {
+        const response = await axios.post(`${NEXT_APP_BASE_URL}/api/${chatId}`, JSON.stringify({ question: question, messages }), {
 
             headers: {
                 "Content-Type": "application/json"
@@ -57,7 +59,7 @@ export default function ChatSeciton() {
         <div >
             <div className=' w-full h-[70vh] my-5 overflow-y-auto px-14' ref={scrollContainerRef}>
                 <div className='relative'>
-                    <h1 className='bg-[#195157] px-3 py-2 rounded-sm rounded-t-none flex justify-center fixed top-1 left-[45%]'>Chatting With {pdfName}</h1>
+                    <h1 className='bg-[#195157] px-3 py-2 rounded-sm rounded-t-none flex justify-center fixed top-1 left-[40%]'>Chatting With {truncate(pdfName)}</h1>
 
                     {
                         allMessages.map((message, index) => {

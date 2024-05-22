@@ -12,7 +12,7 @@ let PDFID: string = ""
 export async function getVectorStore(client: Pinecone, userId: string, pdfId: string) {
   
         const embeddings = new OpenAIEmbeddings();
-        const index = client.Index(process.env.PINECONE_INDEX_NAME)
+        const index = client.Index(process.env.PINECONE_INDEX_NAME!)
         connectMongoDb()
         try {
             // for first question

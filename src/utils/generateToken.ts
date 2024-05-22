@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
+import { SignJWT } from 'jose';
 
 export const generateToken = async (user: { email: string, password: string}) => {
     const token = new SignJWT({ ...user })
@@ -6,7 +6,7 @@ export const generateToken = async (user: { email: string, password: string}) =>
         .setExpirationTime((Math.floor(Date.now() / 1000)) + 60 * 60 * 10) // 10hr
         .setIssuedAt((Math.floor(Date.now() / 1000)))
         .setNotBefore((Math.floor(Date.now() / 1000)))
-        .sign(new TextEncoder().encode(process.env.SECRET));
+        .sign(new TextEncoder().encode(process.env.SECRET!));
 
     return token
 }

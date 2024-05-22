@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
     const token = req.cookies.get("token")?.value || ""
     try {
         if (token != "") {
-            const user = await jwtVerify(token, new TextEncoder().encode(process.env.SECRET))
+            const user = await jwtVerify(token, new TextEncoder().encode(process.env.SECRET!))
             if (!user) {
                 return NextResponse.json({ isLoggedIn: true }, { status: 403 })
             }

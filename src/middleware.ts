@@ -1,13 +1,13 @@
 import { jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
-import { users } from "./models/User";
+
 
 export async function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname
     const token = request.cookies.get("token")?.value!
 
     if(token){
-        const user = await jwtVerify(token, new TextEncoder().encode(process.env.SECRET))
+        const user = await jwtVerify(token, new TextEncoder().encode(process.env.SECRET!))
         if(user){
             if(path == "/chat" || path == "/"){
                 return NextResponse.next()
@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
        
     }
     else{
-        if(path == "/login"){
+        if(path == "/login" || path =="/signup"){
             return NextResponse.next()
         }
         else{

@@ -11,7 +11,7 @@ export const initUser = async () => {
     try {
         const token = cookies().get("token")?.value!
         if (token != "") {
-            const user = await jwtVerify(token, new TextEncoder().encode(process.env.SECRET))
+            const user = await jwtVerify(token, new TextEncoder().encode(process.env.SECRET!))
             if (!user) {
                 return false
             }

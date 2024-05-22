@@ -8,7 +8,7 @@ export async function GET(req: NextRequest){
     const token = req.cookies.get("token")?.value!
     if(token){
         try{
-            const userFromToken = await jwtVerify(token, new TextEncoder().encode(process.env.SECRET))
+            const userFromToken = await jwtVerify(token, new TextEncoder().encode(process.env.SECRET!))
             const { email, password } = userFromToken.payload;
             const user =  await users.findOne({ email, password })
             if (user) {
@@ -20,7 +20,12 @@ export async function GET(req: NextRequest){
                         pdfName:pdf.pdfName
                     }
                 })
-                return NextResponse.json(JSON.stringify({ userPdfs: pdfArray }), { status: 200 })
+
+                if(pdfArray.length == 0){
+                return NextResponse.json(JSON.stringify({ userPdfs: pdfArray , isEmpty:true}), { status: 200 })
+
+                }
+                return NextResponse.json(JSON.stringify({ userPdfs: pdfArray, isEmpty:false }), { status: 200 })
             }
         }
         catch(err){
