@@ -124,9 +124,9 @@ export default function HomePage() {
                 <h3 className='my-2 '>Click here to upload files</h3>
               </div>
             }
-          <div {...getInputProps()}>
+          <input {...getInputProps()} />
             
-          </div>
+          {/* </div> */}
         </div>
         {/* <input
           type='file'
