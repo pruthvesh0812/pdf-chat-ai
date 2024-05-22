@@ -16,7 +16,7 @@ The vector embeddings are stored in pinecone vector database. It uses indexing t
 The user can interact with the pdf once it is processed. A conversational format is used for the chat. The question the user asks, is first converted into vector embeddings, and then context for the question is retrieved from pdf's vector embeddings in the pinecone db (semantic search). Then the questions vector embeddings, contextual vector embeddings, and chat history is passed to the historyAwareConversationalRetrievalChain from langchain with a set of custom prompts to get the desired output
 
 ## Architecture Diagram
-![pdf-chat-ai-architecture](https://github.com/pruthvesh0812/pdf-chat-ai/assets/98747838/55f36d73-7d79-48ff-8801-34cd0e179323)
+![pdf-chat-ai-architecture](https://github.com/pruthvesh0812/pdf-chat-ai/assets/98747838/2822321f-5d18-42b9-af6e-1da17f437eaf)
 
 ## Tech Stack
 Nextjs 13, MongoDb, Langchain, PineconeDb
