@@ -100,6 +100,7 @@ export default function HomePage() {
               (isDragActive || uploadedFiles.length != 0) ? 
               <div className="flex flex-col items-center justify-center h-full -mt-2 text-lg">
                 <h3 className="text-xl">Uploading File... Please Wait</h3> 
+                <Loading />
                 {
                   uploadedFiles.map(file=>{
                     return (
