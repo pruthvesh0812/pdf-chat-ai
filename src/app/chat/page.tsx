@@ -8,9 +8,14 @@ import { pdfIdState } from '../../store/Pdf'
 import { truncate } from '@/utils/truncate'
 import { NEXT_APP_BASE_URL } from '../../../envv'
 
-const getResponse = async (question: string, messages: messageType[], pdfId: string) => {
+const getResponse = async (question: string, messages: messageType[], pdfId: string, setAllMessages:React.Dispatch<React.SetStateAction<messageType[]>>) => {
     const chatId = pdfId
     try {
+
+        // get request to init redis subscriber - eventSource sends a get request by default
+        const eventSource = new EventSource(`http://localhost:5001/chat/${chatId}`)
+
+        // post request to send question to backend
         const response = await axios.post(`${NEXT_APP_BASE_URL}/api/${chatId}`, JSON.stringify({ question: question, messages }), {
 
             headers: {
@@ -19,9 +24,21 @@ const getResponse = async (question: string, messages: messageType[], pdfId: str
 
         })
 
-        if (response) {
+        if (response && response.data.pending == true) {
             // console.log(response.data, "from llm")
-            return response.data.response
+            eventSource.addEventListener('message',(event)=>{
+                const date = new Date();
+                setAllMessages((prev) => [...prev, { type: "AI", text: event.data, timestamp: date.getTime() }]);
+            })
+
+            eventSource.addEventListener('error', (event) => {
+                const date = new Date();
+                setAllMessages((prev) => [...prev, { type: "AI", text: "Error", timestamp: date.getTime() }]);
+                console.error('Error occurred while streaming:', event);
+                eventSource.close();
+              });
+
+           
         }
     }
     catch (err) {
@@ -97,9 +114,8 @@ export default function ChatSeciton() {
                             setGettingResponse(true)
                             setAllMessages((prev) => [...prev, { type: "HUMAN", text: question, timestamp: new Date().getTime() }]);
 
-                            const response = await getResponse(question, allMessages, pdfId);
-                            const date = new Date();
-                            setAllMessages((prev) => [...prev, { type: "AI", text: response, timestamp: date.getTime() }]);
+                            const response = await getResponse(question, allMessages, pdfId, setAllMessages);
+                           
                             setQuestion("");
                             setGettingResponse(false)
                         }
@@ -116,9 +132,9 @@ export default function ChatSeciton() {
 
                             setAllMessages((prev) => [...prev, { type: "HUMAN", text: question, timestamp: new Date().getTime() }]);
 
-                            const response = await getResponse(question, allMessages, pdfId)
-                            const date = new Date()
-                            setAllMessages((prev) => [...prev, { type: "AI", text: response, timestamp: date.getTime() }]);
+                            await getResponse(question, allMessages, pdfId, setAllMessages)
+                            // const date = new Date()
+                            // setAllMessages((prev) => [...prev, { type: "AI", text: response, timestamp: date.getTime() }]);
                             setQuestion("")
                             setGettingResponse(false)
 
