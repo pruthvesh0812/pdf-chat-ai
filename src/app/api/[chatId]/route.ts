@@ -11,22 +11,23 @@ export async function POST(req: NextRequest) {
   const pdfId = req.nextUrl.pathname.split('/')[2]
   const userId = req.cookies.get("user")?.value as string
  
-  const chatHistory = messages.map(message => {
-    if (message.type == "AI") {
-      return new AIMessage(message.text)
-    }
-    else {
-      return new HumanMessage(message.text)
-    }
-  })
+  // const chatHistory = messages.map(message => {
+  //   if (message.type == "AI") {
+  //     return new AIMessage(message.text)
+  //   }
+  //   else {
+  //     return new HumanMessage(message.text)
+  //   }
+  // })
 
   // console.log(chatHistory,"chat history")
   try {
     
     await redisConnect()
-    const client = await getPineconeClient()
-    await MQClient.lPush("Questions", JSON.stringify({client, userId, pdfId,question,chatHistory}))
+    // const client = await getPineconeClient()
+    await MQClient.lPush("Questions", JSON.stringify({ userId, pdfId,question,messages}))
     // console.log(result.answer)
+    console.log("after lpush")
     return NextResponse.json({ response: "response pending",pending:true }, { status: 200 })
   }
   catch (err) {
