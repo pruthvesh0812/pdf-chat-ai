@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
         if (userDb) {
             const user = { email, password }
             const token = await generateToken(user)
-            const response = NextResponse.json({ message: "success", token }, { status: 200 })
+            const response = NextResponse.json({ message: "success", token , userId:userDb.userId }, { status: 200 })
 
             response.cookies.set("token", token, {
                 httpOnly: true

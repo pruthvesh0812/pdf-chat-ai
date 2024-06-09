@@ -18,6 +18,7 @@ export default function Login() {
         try{
             const res = await axios.post(`${NEXT_APP_BASE_URL}/api/login`,JSON.stringify(userSignIn))
             if(res.status == 200){
+                localStorage.setItem("userId",res.data.userId)
                 router.push("/")
             }
         }

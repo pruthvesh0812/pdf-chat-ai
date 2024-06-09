@@ -8,47 +8,19 @@ import { pdfIdState } from '../../store/Pdf'
 import { truncate } from '@/utils/truncate'
 import { NEXT_APP_BASE_URL } from '../../../envv'
 
-const getResponse = async (question: string,connectionOn:boolean, messages: messageType[], pdfId: string, setAllMessages:React.Dispatch<React.SetStateAction<messageType[]>>,setConnectionOn:React.Dispatch<React.SetStateAction<boolean>>) => {
+const getResponse = async (question: string,messages: messageType[], pdfId: string) => {
     const chatId = pdfId
-    try {
-        // let eventSource:EventSource | undefined = undefined;
-        // if(!connectionOn){
-        //     // get request to init redis subscriber - eventSource sends a get request by default
-        //      eventSource = new EventSource(`http://localhost:5001/chat/${chatId}`)
-        // }
-       
+    try {   
         // post request to send question to backend
         const response = await axios.post(`${NEXT_APP_BASE_URL}/api/${chatId}`, JSON.stringify({ question: question, messages }), {
-
             headers: {
                 "Content-Type": "application/json"
             }
- 
         })
 
-        console.log(response,"res")
-
         if (response && response.data.pending == true) {
-            // console.log(response.data, "from llm")
-            console.log("inside pending;")
-            // eventSource?.addEventListener('message',(event)=>{
-            //     const date = new Date();
-            //     console.log('message',event)
-            //     setAllMessages((prev) => [...prev, { type: "AI", text: event.data, timestamp: date.getTime() }]);
-            // })
-
-            // eventSource?.addEventListener('error', (event) => {
-            //     const date = new Date();
-            //     setAllMessages((prev) => [...prev, { type: "AI", text: "Error", timestamp: date.getTime() }]);
-            //     console.error('Error occurred while streaming:', event);
-            //     eventSource.close();
-            //   });
-              console.log("inside pending end;")
-           
-           
-        }
-       
         
+        }    
     }
     catch (err) {
         throw new Error("Error while fetching answer from server")
@@ -59,45 +31,58 @@ const isEmptyOrWhitespace = (str:string) => {
     return !str.trim();
 }
 
-const pollResponse = async (connectionOn:boolean,setConnectionOn:React.Dispatch<React.SetStateAction<boolean>>,pdfId: string, setAllMessages:React.Dispatch<React.SetStateAction<messageType[]>>)=>{
-    const chatId = pdfId;
-    let eventSource:EventSource | undefined = undefined;
-    console.log("inside poll response")
-    let responseCame = false
-    try{
+// const pollResponse = async (connectionOn:boolean,setConnectionOn:React.Dispatch<React.SetStateAction<boolean>>,pdfId: string, setAllMessages:React.Dispatch<React.SetStateAction<messageType[]>>)=>{
+//     const chatId = pdfId;
+//     let eventSource:EventSource | undefined = undefined;
+//     console.log("inside poll response")
+//     let responseCame = false
+//     try{
         
-        if(!connectionOn){
-            // get request to init redis subscriber - eventSource sends a get request by default
-             eventSource = new EventSource(`http://localhost:5001/chat/${chatId}`)
-        }
-        while(!responseCame){
-            eventSource?.addEventListener('message',(event)=>{
-                const date = new Date();
-                console.log('message',event)
-                setAllMessages((prev) => [...prev, { type: "AI", text: event.data, timestamp: date.getTime() }]);
-                responseCame = true 
-            })
+//         if(!connectionOn){
+//             // get request to init redis subscriber - eventSource sends a get request by default
+//              eventSource = new EventSource(`http://localhost:5001/chat/${chatId}`)
+//         }
+//         // while(!responseCame){
+//         //     eventSource?.addEventListener('message',(event)=>{
+//         //         const date = new Date();
+//         //         console.log('message',event)
+//         //         setAllMessages((prev) => [...prev, { type: "AI", text: event.data, timestamp: date.getTime() }]);
+//         //         responseCame = true 
+//         //     })
         
-            eventSource?.addEventListener('error', (event) => {
-                const date = new Date();
-                setAllMessages((prev) => [...prev, { type: "AI", text: "Some error occurred while getting response", timestamp: date.getTime() }]);
-                console.error('Error occurred while streaming:', event);
-                eventSource?.close();
-                responseCame = true
+//         //     eventSource?.addEventListener('error', (event) => {
+//         //         const date = new Date();
+//         //         setAllMessages((prev) => [...prev, { type: "AI", text: "Some error occurred while getting response", timestamp: date.getTime() }]);
+//         //         console.error('Error occurred while streaming:', event);
+//         //         eventSource?.close();
+//         //         responseCame = true
 
-              });
-        }
-       console.log("control here")
-    }
-    catch(err){
-        console.log("err:",err)
-    }
+//         //       });
+//         // }
+//         // const eventSource = new EventSource(`http://localhost:5001/chat/${pdfId}`);
+
+//         eventSource!.onmessage =  (event) => {
+//           const data = JSON.parse(event.data);
+//           console.log("event",data)
+//         };
+     
+//         eventSource!.onerror =  (error) => {
+//           console.error('EventSource failed:', error);
+//         };
+    
+//         return () => {
+//           eventSource!.close();
+//         };
+//        console.log("control here")
+//     }
+//     catch(err){
+//         console.log("err:",err)
+//     }
    
-}
+// }
 
 export default function ChatSeciton() {
     const [question, setQuestion] = useState("")
-    const [connectionOn,setConnectionOn] = useState(false)
     const [gettingResponse,setGettingResponse] = useState<boolean>(false)
     const {pdfId,pdfName} = useRecoilValue(pdfIdState)
     const [allMessages, setAllMessages] = useState<messageType[]>(
@@ -118,44 +103,24 @@ export default function ChatSeciton() {
         }
     }, [allMessages])
 
-    // const pollResponse = (connectionOn:boolean,chatId:string)=>{
-    //     if(!connectionOn){
-    //         let eventSource: EventSource | null= null
-    //         eventSource = new EventSource(`http://localhost:5001/chat/${chatId}`)
-    //     }
-    //     else{
-    //         if(eventSource === null){
-    //             eventSource = new EventSource(`http://localhost:5001/chat/${chatId}`);
-    //         }
-    //         eventSource.addEventListener('message',(event)=>{
-    //             const date = new Date();
-    //             console.log('message',event)
-    //             setAllMessages((prev) => [...prev, { type: "AI", text: event.data, timestamp: date.getTime() }]);
-    //         })
 
-    //         eventSource.addEventListener('error', (event) => {
-    //             const date = new Date();
-    //             setAllMessages((prev) => [...prev, { type: "AI", text: "Error", timestamp: date.getTime() }]);
-    //             console.error('Error occurred while streaming:', event);
-    //             eventSource.close();
-    //           });
-    //     }
-    // }
-   
-    // pollResponse(connectionOn,setConnectionOn, pdfId, setAllMessages)
-    const [events, setEvents] = useState([]);
 
   useEffect(() => {
     const eventSource = new EventSource(`http://localhost:5001/chat/${pdfId}`);
+    console.log("inside useeffect")
+    eventSource.onmessage =  (event) => {
+          console.log("event",event)
 
-    eventSource.addEventListener('message', (event) => {
-      const data = JSON.parse(event.data);
-      console.log("event",data)
-    });
+      const data = JSON.parse(event.data as string);
+      const response = JSON.parse(data)
+      console.log(response)
+      setAllMessages((prev) => [...prev, { type: "AI", text: response.result, timestamp: new Date().getTime() }]);
+
+    };
  
-    eventSource.addEventListener('error', (event) => {
-      console.error('EventSource failed:', event);
-    });
+    eventSource.onerror =  (error) => {
+      console.error('EventSource failed:', error);
+    };
 
     return () => {
       eventSource.close();
@@ -204,7 +169,7 @@ export default function ChatSeciton() {
                             setGettingResponse(true)
                             setAllMessages((prev) => [...prev, { type: "HUMAN", text: question, timestamp: new Date().getTime() }]);
 
-                             await getResponse(question,connectionOn, allMessages, pdfId, setAllMessages,setConnectionOn);
+                             await getResponse(question, allMessages, pdfId);
                             // pollResponse(connectionOn,pdfId)
                             console.log("after getRes")
                             // pollResponse(connectionOn,setConnectionOn, pdfId, setAllMessages)
@@ -225,7 +190,7 @@ export default function ChatSeciton() {
 
                             setAllMessages((prev) => [...prev, { type: "HUMAN", text: question, timestamp: new Date().getTime() }]);
 
-                            await getResponse(question,connectionOn, allMessages, pdfId, setAllMessages,setConnectionOn)
+                            await getResponse(question,allMessages, pdfId)
                             console.log("after getRes")
                             // pollResponse(connectionOn,setConnectionOn, pdfId, setAllMessages)
                             
